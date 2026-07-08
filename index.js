@@ -11,13 +11,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Home route
-app.get("/", (req, res) => {
+app.get("/register", (req, res) => {
     res.render("index");
 });
 
 app.get("/login",(req,res) => {
   res.render("login");
 })
+
+app.get("/logout", (req, res) => {
+    res.clearCookie("token");
+    res.redirect("/login");
+});
 
 // Register route
 app.post("/register", async (req, res) => {
