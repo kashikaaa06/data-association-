@@ -15,6 +15,10 @@ app.get("/", (req, res) => {
     res.render("index");
 });
 
+app.get("/login",(req,res) => {
+  res.render("login");
+})
+
 // Register route
 app.post("/register", async (req, res) => {
     try {
@@ -63,6 +67,60 @@ app.post("/register", async (req, res) => {
         
     } catch (err) {
         console.error("Error during registration:", err.message);
+        res.status(500).send("Error: " + err.message);
+    }
+});
+//login route 
+
+app.post("/login", async (req, res) => {
+    try {
+        let { email, password } = req.body;
+        
+        console.log("✅ Login route hit");
+        console.log("Email:", email);
+        
+      
+        let user = await userModel.findOne({ email });
+        
+       
+        if (!user) {
+            console.log(" User not found");
+            return res.status(400).send("Invalid email or password");
+        }
+        
+        console.log("User found:", user.email);
+        
+
+        bcrypt.compare(password, user.password, (err, result) => {
+            if (err) {
+                console.error(" Bcrypt error:", err);
+                return res.status(500).send("Internal server error");
+            }
+            
+            if (result) {
+                // Password matches - create JWT token
+                const token = jwt.sign(
+                    { email: user.email, userid: user._id },
+                    "xyz",
+                    { expiresIn: "1h" }
+                );
+                
+                // Set cookie
+                res.cookie("token", token, {
+                    httpOnly: true,
+                    maxAge: 60 * 60 * 1000 // 1 hour
+                });
+                
+                console.log(" Login successful for:", user.email);
+                res.status(200).send("Login successful!");
+            } else {
+                console.log(" Invalid password for:", user.email);
+                res.status(400).send("Invalid email or password");
+            }
+        });
+        
+    } catch (err) {
+        console.error(" Login error:", err.message);
         res.status(500).send("Error: " + err.message);
     }
 });
