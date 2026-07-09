@@ -14,7 +14,7 @@ app.use(cookieParser());
 function isloggedin(req, res, next) {
   
    if (!req.cookies.token || req.cookies.token === "") {
-       return res.send("you must be logged in");
+       return res.redirect("/login");
    } 
    try {
        let data = jwt.verify(req.cookies.token, "xyz");
@@ -41,8 +41,9 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/profile", isloggedin, async (req, res) => {
+   let user = await userModel.findOne({email: req.user.email});
     console.log(req.user);
-    res.render("login");
+    res.render("profile", { user });
 });
 
 // Register route
@@ -132,7 +133,7 @@ app.post("/login", async (req, res) => {
                     maxAge: 60 * 60 * 1000 
                 });
                 
-                res.status(200).send("Login successful!");
+                res.status(200).redirect("/profile");
             } else {
                 
                 res.status(400).send("Invalid email or password");
