@@ -29,9 +29,10 @@ const userSchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    posts : {
-        type: mongoose.Schema.Types.ObjectId, ref:"post"
-    },
+    posts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "post"
+    }],
     
     createdAt: {
         type: Date,

@@ -139,14 +139,28 @@ app.post("/login", async (req, res) => {
                 res.status(400).send("Invalid email or password");
             }
         });
-        
-       
-        
+          
     } catch (err) {
        
         res.status(500).send("Error: " + err.message);
     }
 });
+
+
+app.post("/profile", isloggedin, async (req, res) => {
+   let user = await userModel.findOne({email: req.user.email});
+    let {content} = req.body;
+ let post = await postModel.create({
+    user: user._id,
+    content: content ,
+    
+    })
+    user.posts.push(post._id);
+    await user.save();
+    res.redirect("/profile");
+});
+
+
 
 // Start server
 app.listen(3000, () => {
