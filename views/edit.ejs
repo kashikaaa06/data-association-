@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Post</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="min-h-screen bg-zinc-900 text-white p-10 flex items-center justify-center">
+        
+        <div class="bg-zinc-800 p-8 rounded-lg w-full max-w-2xl">
+            <h2 class="text-2xl font-bold mb-6">Edit Post</h2>
+            
+            <form action="/edit/<%= post._id %>" method="POST" class="space-y-4">
+                <textarea 
+                    name="content" 
+                    rows="6"
+                    class="w-full bg-zinc-700 border border-zinc-600 rounded p-3 text-white"
+                ><%= post.content %></textarea>
+                
+                <div class="flex gap-3">
+                    <button type="submit" class="bg-blue-500 px-6 py-2 rounded hover:bg-blue-600">
+                        💾 Update
+                    </button>
+                    <a href="/profile" class="bg-zinc-600 px-6 py-2 rounded hover:bg-zinc-500">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
